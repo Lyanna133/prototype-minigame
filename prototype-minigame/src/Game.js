@@ -9,6 +9,7 @@ export default class Game extends Phaser.Scene
 
     create()
     {
-        
+
+        this.add.image(400, 300, 'sokoban', 52)
     }
 }

@@ -10,6 +10,8 @@ export default class Game extends Phaser.Scene
     create()
     {
 
-        this.add.image(400, 300, 'sokoban', 52)
+        // this.add.image(400, 300, 'sokoban', 52)
+        this.add.sprite(400, 300, 'sokoban', 52)
+            .play('down-walk') //playing of the animation
     }
 }

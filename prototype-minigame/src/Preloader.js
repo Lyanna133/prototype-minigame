@@ -10,6 +10,7 @@ export default class Preloader extends Phaser.Scene
 
     preload()
     {
+        //loading in of the spritesheet
         this.load.spritesheet('sokoban', 'textures/sokoban_tilesheet.png',{
             frameWidth: 64
         })
@@ -17,6 +18,7 @@ export default class Preloader extends Phaser.Scene
 
     create()
     {
+        // getting all the animations from the spritesheet
         this.anims.create({
             key: 'down-idle',
             frames: [{ key: 'sokoban', frame: 52 }]

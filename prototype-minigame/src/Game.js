@@ -10,9 +10,9 @@ export default class Game extends Phaser.Scene
     create()
     {
 
-        // // this.add.image(400, 300, 'sokoban', 52)
+        // this.add.image(400, 300, 'sokoban', 52) static person test
         // this.add.sprite(400, 300, 'sokoban', 52)
-        //     .play('down-walk') //playing of the animation
+        //     .play('down-walk') //playing of the animation test
         
         const { width, height } = this.scale
 
@@ -21,11 +21,13 @@ export default class Game extends Phaser.Scene
     }
     init()
     {
+        //give acces to arrowkeys
         this.cursors = this.input.keyboard.createCursorKeys()	
 
     }
     update()
     {
+        //being able to walk with the arrowkeys
         const speed = 200
     
         if (this.cursors.left.isDown)
@@ -56,6 +58,7 @@ export default class Game extends Phaser.Scene
             const direction = parts[0]
             this.player.play(`${direction}-idle`)
         }
+        
     }
     
 }

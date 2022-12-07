@@ -12,9 +12,9 @@ export default class Game extends Phaser.Scene
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
 	boxGroup
     /** @type {Phaser.Physics.Arcade.Sprite} */
-	activeBox //werkt!!!
-
+	activeBox 
     itemsGroup
+    selectedBoxes = []
 
     constructor()
     {
@@ -62,8 +62,6 @@ export default class Game extends Phaser.Scene
     
         this.updatePlayer()
         this.updateActiveBox()
-
-
             this.updateActiveBox()
             
             // player is behind boxes when behind them and in front when in front them
@@ -71,7 +69,11 @@ export default class Game extends Phaser.Scene
                 /** @type {Phaser.Physics.Arcade.Sprite} */
                 // @ts-ignore
                 const child = c
-        
+                if (child.getData('sorted'))
+                {
+                    return
+                }
+
                 child.setDepth(child.y)
             })
         
@@ -152,6 +154,7 @@ export default class Game extends Phaser.Scene
      */
     handlePlayerBoxCollide(player, box)
     {
+        
         if (this.activeBox)
         {
             return
@@ -159,6 +162,13 @@ export default class Game extends Phaser.Scene
         this.activeBox = box
 
         this.activeBox.setFrame(9)
+
+        const opened = box.getData('opened')
+	
+        if (opened)
+        {
+            return
+        }
     }
 
     updateActiveBox()
@@ -226,17 +236,69 @@ export default class Game extends Phaser.Scene
 			break
         }
 
+        
+
         box.setData('opened', true)
+        item.setData('sorted', true)
+        item.setDepth(2000)
+
+        item.setActive(true) 
+	    item.setVisible(true) 
 
         item.scale = 0
         item.alpha = 0
+
+        this.selectedBoxes.push({ box, item })
 
         this.tweens.add({
             targets: item,
             y: '-=50',
             alpha: 1,
             scale: 1,
-            duration: 500
+            duration: 500,
+            onComplete: () => {
+                if(this.selectedBoxes.length <2)
+                {
+                    return
+                }
+                this.checkForMatch()
+            }
+        })
+
+    }
+
+    checkForMatch()
+    {
+        // pop from end to get second and first opened boxes
+        const second = this.selectedBoxes.pop()
+        const first = this.selectedBoxes.pop()
+
+        // no match if the revealed items are not the same texture
+        if (first.item.texture !== second.item.texture)
+        {
+            // hide the items and set box to no longer opened
+            this.tweens.add({
+                targets: [first.item, second.item],
+                y: '+=50',
+                alpha: 0,
+                scale: 0,
+                duration: 300,
+                delay: 1000,
+                onComplete: () => {
+                    this.itemsGroup.killAndHide(first.item)
+                    this.itemsGroup.killAndHide(second.item)
+
+                    first.box.setData('opened', false)
+                    second.box.setData('opened', false)
+                }
+            })
+            return
+        }
+
+        // we have a match! wait 1 second then set box to frame 8
+        this.time.delayedCall(1000, () => {
+            first.box.setFrame(8)
+            second.box.setFrame(8)
         })
     }
 

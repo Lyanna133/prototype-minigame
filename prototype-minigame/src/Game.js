@@ -4,6 +4,8 @@ export default class Game extends Phaser.Scene
 {
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
 	boxGroup
+    /** @type {Phaser.Physics.Arcade.Sprite} */
+	activeBox
 
     constructor()
     {
@@ -20,20 +22,22 @@ export default class Game extends Phaser.Scene
             .setOffset(12, 38)
             .play('down-idle')
 
-        // creating the box
-        const boxGroup = this.physics.add.staticGroup()
-
-        
+        //generating the boxes
         this.boxGroup = this.physics.add.staticGroup()
 	    this.createBoxes()
-	    this.physics.add.collider(this.player, this.boxGroup)
 
-         
-         
+	    // this.physics.add.collider(this.player, this.boxGroup) niet nodig
 
-        // collider between player and boxes, no running through them
-        this.physics.add.collider(this.player, boxGroup)
+        this.physics.add.collider(
+            this.boxGroup,
+            this.player,
+            this.handlePlayerBoxCollide, // 👈 here
+            undefined,
+            this
+        )
+
     }
+
 
     init()
     {
@@ -41,6 +45,7 @@ export default class Game extends Phaser.Scene
         this.cursors = this.input.keyboard.createCursorKeys()	
 
     }
+
     update()
     {
         //being able to walk with the arrowkeys
@@ -74,6 +79,8 @@ export default class Game extends Phaser.Scene
             const direction = parts[0]
             this.player.play(`${direction}-idle`)
         }
+
+        
         
         // player is behind boxes when behind them and in front when in front them
         this.children.each(c => {
@@ -85,7 +92,7 @@ export default class Game extends Phaser.Scene
         })
         
     }
-
+    
      // creating multiple boxes
     createBoxes()
         {
@@ -109,4 +116,19 @@ export default class Game extends Phaser.Scene
                 y += 150
             }
         } 
+    /**
+     * 
+     * @param {Phaser.Physics.Arcade.Sprite} player 
+     * @param {Phaser.Physics.Arcade.Sprite} box
+     */
+    handlePlayerBoxCollide(player, box)
+    {
+        if (this.activeBox)
+        {
+            return
+        }
+        this.activeBox = box
+
+        this.activeBox.setFrame(9)
+    }
 }

@@ -14,6 +14,8 @@ export default class Game extends Phaser.Scene
     /** @type {Phaser.Physics.Arcade.Sprite} */
 	activeBox //werkt!!!
 
+    itemsGroup
+
     constructor()
     {
         super('game')
@@ -43,6 +45,8 @@ export default class Game extends Phaser.Scene
             this
         )
 
+        this.itemsGroup = this.add.group()
+
     }
 
 
@@ -55,9 +59,28 @@ export default class Game extends Phaser.Scene
 
     update()
     {
-        //being able to walk with the arrowkeys
-        const speed = 200
     
+        this.updatePlayer()
+        this.updateActiveBox()
+
+
+            this.updateActiveBox()
+            
+            // player is behind boxes when behind them and in front when in front them
+            this.children.each(c => {
+                /** @type {Phaser.Physics.Arcade.Sprite} */
+                // @ts-ignore
+                const child = c
+        
+                child.setDepth(child.y)
+            })
+        
+    }
+    
+    updatePlayer()
+    {
+        const speed = 200
+
         if (this.cursors.left.isDown)
         {
             this.player.setVelocity(-speed, 0)
@@ -87,32 +110,16 @@ export default class Game extends Phaser.Scene
             this.player.play(`${direction}-idle`)
         }
 
-            const spaceJustPressed = Phaser.Input.Keyboard.JustUp(this.cursors.space)
+        const spaceJustPressed = Phaser.Input.Keyboard.JustUp(this.cursors.space)
         if (spaceJustPressed && this.activeBox)
         {
             this.openBox(this.activeBox)
 
-            // reset box after opened
             this.activeBox.setFrame(10)
             this.activeBox = undefined
         }
-
-	this.updateActiveBox()
-
-
-        this.updateActiveBox()
-        
-        // player is behind boxes when behind them and in front when in front them
-        this.children.each(c => {
-            /** @type {Phaser.Physics.Arcade.Sprite} */
-            // @ts-ignore
-            const child = c
-    
-            child.setDepth(child.y)
-        })
-        
     }
-    
+
      // creating multiple boxes
     createBoxes()
         {
@@ -155,77 +162,82 @@ export default class Game extends Phaser.Scene
     }
 
     updateActiveBox()
-{
-	if (!this.activeBox)
-	{
-		return
-	}
+    {
+        if (!this.activeBox)
+        {
+            return
+        }
 
-	// get the distance here 👇
-	const distance = Phaser.Math.Distance.Between(
-		this.player.x, this.player.y,
-		this.activeBox.x, this.activeBox.y
-	)
+        // get the distance here 👇
+        const distance = Phaser.Math.Distance.Between(
+            this.player.x, this.player.y,
+            this.activeBox.x, this.activeBox.y
+        )
 
-	if (distance < 64) // 👈 do nothing if still near
-	{
-		return
-	}
+        if (distance < 64) // 👈 do nothing if still near
+        {
+            return
+        }
 
-	// return to using frame 10 when too far
-	this.activeBox.setFrame(10)
+        // return to using frame 10 when too far
+        this.activeBox.setFrame(10)
 
-	// and make activeBox undefined
-	this.activeBox = undefined
-}
+        // and make activeBox undefined
+        this.activeBox = undefined
+    }
 
-openBox(box)
-{
-	if (!box)
-	{
-		return
-	}
+    openBox(box)
+    {
+        if (!box)
+        {
+            return
+        }
 
-	const itemType = box.getData('itemType')
-		
-	/** @type {Phaser.GameObjects.Sprite} */
-	let item
+        const itemType = box.getData('itemType')
+            
+        /** @type {Phaser.GameObjects.Sprite} */
+        let item
 
-	switch (itemType)
-	{
-		case 0:
-			item = this.add.sprite(box.x, box.y, 'panda')
+        switch (itemType)
+        {
+            case 0:
+			item = this.itemsGroup.get(box.x, box.y)
+			item.setTexture('panda')
 			break
 
 		case 1:
-			item = this.add.sprite(box.x, box.y, 'giraffe')
+			item = this.itemsGroup.get(box.x, box.y)
+			item.setTexture('giraffe')
 			break
 
 		case 2:
-			item = this.add.sprite(box.x, box.y, 'penguin')
+			item = this.itemsGroup.get(box.x, box.y)
+			item.setTexture('penguin')
 			break
 
 		case 3:
-			item = this.add.sprite(box.x, box.y, 'whale')
+			item = this.itemsGroup.get(box.x, box.y)
+			item.setTexture('whale')
 			break
 
 		case 4:
-			item = this.add.sprite(box.x, box.y, 'crocodile')
+			item = this.itemsGroup.get(box.x, box.y)
+			item.setTexture('crocodile')
 			break
-	}
+        }
 
-	box.setData('opened', true)
+        box.setData('opened', true)
 
-	item.scale = 0
-	item.alpha = 0
+        item.scale = 0
+        item.alpha = 0
 
-	this.tweens.add({
-		targets: item,
-		y: '-=50',
-		alpha: 1,
-		scale: 1,
-		duration: 500
-	})
-}
+        this.tweens.add({
+            targets: item,
+            y: '-=50',
+            alpha: 1,
+            scale: 1,
+            duration: 500
+        })
+    }
 
 }

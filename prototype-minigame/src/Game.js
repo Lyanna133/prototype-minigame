@@ -2,7 +2,8 @@ import Phaser from 'phaser'
 
 export default class Game extends Phaser.Scene
 {
-  
+    /** @type {Phaser.Physics.Arcade.StaticGroup} */
+	boxGroup
 
     constructor()
     {
@@ -22,26 +23,13 @@ export default class Game extends Phaser.Scene
         // creating the box
         const boxGroup = this.physics.add.staticGroup()
 
-        // creating multiple boxes
+        
+        this.boxGroup = this.physics.add.staticGroup()
+	    this.createBoxes()
+	    this.physics.add.collider(this.player, this.boxGroup)
 
-        let xPer = 0.25
-        let y = 150
-
-        for (let row = 0; row < 3; ++row)
-        {
-            for (let col = 0; col < 3; ++col)
-            {
-                const box = boxGroup.get(width * xPer, y, 'sokoban', 10)
-                
-                box.setSize(64, 32)
-                    .setOffset(0, 32)
-
-                xPer += 0.25
-            }
-    
-            xPer = 0.25
-            y += 150
-        }
+         
+         
 
         // collider between player and boxes, no running through them
         this.physics.add.collider(this.player, boxGroup)
@@ -97,5 +85,28 @@ export default class Game extends Phaser.Scene
         })
         
     }
-    
+
+     // creating multiple boxes
+    createBoxes()
+        {
+            const width = this.scale.width
+
+            let xPer = 0.25
+            let y = 150
+            for (let row = 0; row < 3; ++row)
+            {
+                for (let col = 0; col < 3; ++col)
+                {
+                    /** @type {Phaser.Physics.Arcade.Sprite} */
+                    const box = this.boxGroup.get(width * xPer, y, 'sokoban', 10)
+                    box.setSize(64, 32)
+                        .setOffset(0, 32)
+
+                    xPer += 0.25
+                }
+
+                xPer = 0.25
+                y += 150
+            }
+        } 
 }

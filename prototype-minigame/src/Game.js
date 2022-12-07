@@ -5,7 +5,7 @@ export default class Game extends Phaser.Scene
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
 	boxGroup
     /** @type {Phaser.Physics.Arcade.Sprite} */
-	activeBox
+	activeBox //werkt!!!
 
     constructor()
     {
@@ -31,7 +31,7 @@ export default class Game extends Phaser.Scene
         this.physics.add.collider(
             this.boxGroup,
             this.player,
-            this.handlePlayerBoxCollide, // 👈 here
+            this.handlePlayerBoxCollide, // Dit stuk werkt!!!
             undefined,
             this
         )
@@ -80,7 +80,7 @@ export default class Game extends Phaser.Scene
             this.player.play(`${direction}-idle`)
         }
 
-        
+        this.updateActiveBox()
         
         // player is behind boxes when behind them and in front when in front them
         this.children.each(c => {
@@ -131,4 +131,31 @@ export default class Game extends Phaser.Scene
 
         this.activeBox.setFrame(9)
     }
+
+    updateActiveBox()
+{
+	if (!this.activeBox)
+	{
+		return
+	}
+
+	// get the distance here 👇
+	const distance = Phaser.Math.Distance.Between(
+		this.player.x, this.player.y,
+		this.activeBox.x, this.activeBox.y
+	)
+
+	if (distance < 64) // 👈 do nothing if still near
+	{
+		return
+	}
+
+	// return to using frame 10 when too far
+	this.activeBox.setFrame(10)
+
+	// and make activeBox undefined
+	this.activeBox = undefined
+}
+
+
 }

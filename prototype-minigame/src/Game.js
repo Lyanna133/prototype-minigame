@@ -331,7 +331,7 @@ export default class Game extends Phaser.Scene
 
                 // add a You Win! text 👇
                 const { width, height } = this.scale
-                this.add.text(width * 0.5, height * 0.5, 'You Win!', {
+                this.add.text(width * 0.5, height * 0.9, 'You Win!', {
                     fontSize: 48
                 })
                 .setOrigin(0.5)
@@ -381,7 +381,7 @@ export default class Game extends Phaser.Scene
 
         // create a You Lose! message
         const { width, height } = this.scale
-        this.add.text(width * 0.5, height * 0.5, 'You Lose!', { fontSize: 48 })
+        this.add.text(width * 0.5, height * 0.9, 'You Lose!', { fontSize: 48 })
             .setOrigin(0.5)
     }   
 }

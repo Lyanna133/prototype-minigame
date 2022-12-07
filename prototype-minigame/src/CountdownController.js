@@ -22,7 +22,7 @@ export default class CountdownController
 	 * @param {() => void} callback
 	 * @param {number} duration 
 	 */
-	start(callback, duration = 45000)
+	start(callback, duration = 45000) //timer
 	{
             // 1️⃣ stop in case one is already running
         this.stop()

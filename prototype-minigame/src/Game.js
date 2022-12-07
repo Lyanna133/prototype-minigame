@@ -87,6 +87,19 @@ export default class Game extends Phaser.Scene
             this.player.play(`${direction}-idle`)
         }
 
+            const spaceJustPressed = Phaser.Input.Keyboard.JustUp(this.cursors.space)
+        if (spaceJustPressed && this.activeBox)
+        {
+            this.openBox(this.activeBox)
+
+            // reset box after opened
+            this.activeBox.setFrame(10)
+            this.activeBox = undefined
+        }
+
+	this.updateActiveBox()
+
+
         this.updateActiveBox()
         
         // player is behind boxes when behind them and in front when in front them
@@ -166,5 +179,53 @@ export default class Game extends Phaser.Scene
 	this.activeBox = undefined
 }
 
+openBox(box)
+{
+	if (!box)
+	{
+		return
+	}
+
+	const itemType = box.getData('itemType')
+		
+	/** @type {Phaser.GameObjects.Sprite} */
+	let item
+
+	switch (itemType)
+	{
+		case 0:
+			item = this.add.sprite(box.x, box.y, 'panda')
+			break
+
+		case 1:
+			item = this.add.sprite(box.x, box.y, 'giraffe')
+			break
+
+		case 2:
+			item = this.add.sprite(box.x, box.y, 'penguin')
+			break
+
+		case 3:
+			item = this.add.sprite(box.x, box.y, 'whale')
+			break
+
+		case 4:
+			item = this.add.sprite(box.x, box.y, 'crocodile')
+			break
+	}
+
+	box.setData('opened', true)
+
+	item.scale = 0
+	item.alpha = 0
+
+	this.tweens.add({
+		targets: item,
+		y: '-=50',
+		alpha: 1,
+		scale: 1,
+		duration: 500
+	})
+}
 
 }

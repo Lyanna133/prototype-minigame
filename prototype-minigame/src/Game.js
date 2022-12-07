@@ -9,16 +9,31 @@ export default class Game extends Phaser.Scene
 
     create()
     {
-
-        // this.add.image(400, 300, 'sokoban', 52) static person test
-        // this.add.sprite(400, 300, 'sokoban', 52)
-        //     .play('down-walk') //playing of the animation test
         
-        const { width, height } = this.scale
+        const {width, height }    = this.scale
 
-		this.player = this.physics.add.sprite(width * 0.5, height * 0.6, 'sokoban')
-			.play('down-idle')
+        this.player = this.physics.add.sprite(width * 0.5, height * 0.6, 'sokoban')
+            .play('down-idle')
+        // creating the box
+        // this.physics.add.sprite(width * 0.5, height * 0.5, 'sokoban', 10)
+        const boxGroup = this.physics.add.staticGroup()
+
+        let xPer = 0.25
+        let y = 150
+        for (let row = 0; row < 3; ++row)
+        {
+            for (let col = 0; col < 3; ++col)
+            {
+                boxGroup.get(width * xPer, y, 'sokoban', 10)
+    
+                xPer += 0.25
+            }
+    
+            xPer = 0.25
+            y += 150
+        }
     }
+
     init()
     {
         //give acces to arrowkeys

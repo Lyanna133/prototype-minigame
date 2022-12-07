@@ -72,4 +72,8 @@ export default class CountdownController
         // 4️⃣ change label to show new value
         this.label.text = seconds.toFixed(2)
 	}
+    create()
+    {
+        
+    }
 }

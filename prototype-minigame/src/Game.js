@@ -6,9 +6,12 @@ const level = [
     [3, 4, 2]
 ]
 
+import CountdownController from './CountdownController'
 
 export default class Game extends Phaser.Scene
 {
+    /** @type {CountdownController} */
+	countdown
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
 	boxGroup
     /** @type {Phaser.Physics.Arcade.Sprite} */
@@ -47,7 +50,15 @@ export default class Game extends Phaser.Scene
         )
 
         this.itemsGroup = this.add.group()
+        
+        
+        // create a Text object 👇
+		const timerLabel = this.add.text(width * 0.5, 50, '45', { fontSize: 48 })
+        .setOrigin(0.5)
 
+        // 👇 create a new instance
+        this.countdown = new CountdownController(this, timerLabel)
+        this.countdown.start(this.handleCountdownFinished.bind(this))
     }
 
 
@@ -60,7 +71,7 @@ export default class Game extends Phaser.Scene
 
     update()
     {
-    
+        this.countdown.update()
         this.updatePlayer()
         this.updateActiveBox()
             this.updateActiveBox()
@@ -313,7 +324,7 @@ export default class Game extends Phaser.Scene
             if (this.matchesCount >= 4)
             {
                     // game won
-
+                    this.countdown.stop()
                 // 👇 disable and stop player like before
                 this.player.active = false
                 this.player.setVelocity(0, 0)
@@ -360,6 +371,17 @@ export default class Game extends Phaser.Scene
                 }
             })
         })
-}
+        
+    }
+    handleCountdownFinished()
+    {
+        // disable player like we've done before
+        this.player.active = false
+        this.player.setVelocity(0, 0)
 
+        // create a You Lose! message
+        const { width, height } = this.scale
+        this.add.text(width * 0.5, height * 0.5, 'You Lose!', { fontSize: 48 })
+            .setOrigin(0.5)
+    }   
 }

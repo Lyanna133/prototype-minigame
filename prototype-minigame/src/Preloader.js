@@ -15,11 +15,11 @@ export default class Preloader extends Phaser.Scene
             frameWidth: 64
         })
 
-        this.load.image('panda', 'textures/panda.png')
+        this.load.image('crocodile', 'textures/crocodile.png')
         this.load.image('giraffe', 'textures/giraffe.png')
         this.load.image('penguin', 'textures/penguin.png')
         this.load.image('whale', 'textures/whale.png')
-        this.load.image('crocodile', 'textures/crocodile.png')
+        this.load.image('owl', 'textures/owl.png')
     }
 
     create()

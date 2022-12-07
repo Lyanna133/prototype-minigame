@@ -15,6 +15,7 @@ export default class Game extends Phaser.Scene
 	activeBox 
     itemsGroup
     selectedBoxes = []
+    matchesCount = 0
 
     constructor()
     {
@@ -120,6 +121,11 @@ export default class Game extends Phaser.Scene
             this.activeBox.setFrame(10)
             this.activeBox = undefined
         }
+        if (!this.player.active)
+        {
+            return
+        }
+
     }
 
      // creating multiple boxes
@@ -154,7 +160,12 @@ export default class Game extends Phaser.Scene
      */
     handlePlayerBoxCollide(player, box)
     {
-        
+        const opened = box.getData('opened')
+	
+        if (opened)
+        {
+            return
+        }
         if (this.activeBox)
         {
             return
@@ -162,13 +173,6 @@ export default class Game extends Phaser.Scene
         this.activeBox = box
 
         this.activeBox.setFrame(9)
-
-        const opened = box.getData('opened')
-	
-        if (opened)
-        {
-            return
-        }
     }
 
     updateActiveBox()
@@ -212,7 +216,7 @@ export default class Game extends Phaser.Scene
         {
             case 0:
 			item = this.itemsGroup.get(box.x, box.y)
-			item.setTexture('panda')
+			item.setTexture('crocodile')
 			break
 
 		case 1:
@@ -232,7 +236,7 @@ export default class Game extends Phaser.Scene
 
 		case 4:
 			item = this.itemsGroup.get(box.x, box.y)
-			item.setTexture('crocodile')
+			item.setTexture('owl')
 			break
         }
 
@@ -257,6 +261,12 @@ export default class Game extends Phaser.Scene
             scale: 1,
             duration: 500,
             onComplete: () => {
+                if (itemType === 0)
+                {
+                    this.handleCrocSelected()
+                    return
+                }
+
                 if(this.selectedBoxes.length <2)
                 {
                     return
@@ -294,12 +304,62 @@ export default class Game extends Phaser.Scene
             })
             return
         }
-
-        // we have a match! wait 1 second then set box to frame 8
-        this.time.delayedCall(1000, () => {
+            ++this.matchesCount
+            // we have a match! wait 1 second then set box to frame 8
+            this.time.delayedCall(1000, () => {
             first.box.setFrame(8)
             second.box.setFrame(8)
+
+            if (this.matchesCount >= 4)
+            {
+                    // game won
+
+                // 👇 disable and stop player like before
+                this.player.active = false
+                this.player.setVelocity(0, 0)
+
+                // add a You Win! text 👇
+                const { width, height } = this.scale
+                this.add.text(width * 0.5, height * 0.5, 'You Win!', {
+                    fontSize: 48
+                })
+                .setOrigin(0.5)
+            }
         })
     }
+
+    handleCrocSelected()
+    {
+        // get the selected box information
+        const { box, item } = this.selectedBoxes.pop()
+
+        // tint the bear red
+        item.setTint(0xff0000)
+
+        // set the box to frame 7 (a red box)
+        box.setFrame(7)
+
+        // disable the player and any movement
+        this.player.active = false
+        this.player.setVelocity(0, 0)
+
+        // wait 1 second and then return to normal
+        this.time.delayedCall(1000, () => {
+            item.setTint(0xffffff)
+            box.setFrame(10)
+            box.setData('opened', false)
+
+            this.tweens.add({
+                targets: item,
+                y: '+=50',
+                alpha: 0,
+                scale: 0,
+                duration: 300,
+                onComplete: () => {
+                    this.player.active = true // 👈 re-activate the player
+                }
+            })
+        })
+}
 
 }

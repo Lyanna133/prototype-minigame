@@ -18,7 +18,7 @@ export default class Preloader extends Phaser.Scene
         this.load.image('crocodile', 'textures/crocodile.png')
         this.load.image('giraffe', 'textures/giraffe.png')
         this.load.image('penguin', 'textures/penguin.png')
-        this.load.image('whale', 'textures/whale.png')
+        this.load.image('parrot', 'textures/parrot.png')
         this.load.image('owl', 'textures/owl.png')
     }
 

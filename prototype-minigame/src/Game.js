@@ -242,7 +242,7 @@ export default class Game extends Phaser.Scene
 
 		case 3:
 			item = this.itemsGroup.get(box.x, box.y)
-			item.setTexture('whale')
+			item.setTexture('parrot')
 			break
 
 		case 4:

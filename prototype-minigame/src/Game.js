@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 
 export default class Game extends Phaser.Scene
 {
+  
+
     constructor()
     {
         super('game')
@@ -13,25 +15,36 @@ export default class Game extends Phaser.Scene
         const {width, height }    = this.scale
 
         this.player = this.physics.add.sprite(width * 0.5, height * 0.6, 'sokoban')
+            .setSize(40, 16)
+            .setOffset(12, 38)
             .play('down-idle')
+
         // creating the box
-        // this.physics.add.sprite(width * 0.5, height * 0.5, 'sokoban', 10)
         const boxGroup = this.physics.add.staticGroup()
+
+        // creating multiple boxes
 
         let xPer = 0.25
         let y = 150
+
         for (let row = 0; row < 3; ++row)
         {
             for (let col = 0; col < 3; ++col)
             {
-                boxGroup.get(width * xPer, y, 'sokoban', 10)
-    
+                const box = boxGroup.get(width * xPer, y, 'sokoban', 10)
+                
+                box.setSize(64, 32)
+                    .setOffset(0, 32)
+
                 xPer += 0.25
             }
     
             xPer = 0.25
             y += 150
         }
+
+        // collider between player and boxes, no running through them
+        this.physics.add.collider(this.player, boxGroup)
     }
 
     init()
@@ -73,6 +86,15 @@ export default class Game extends Phaser.Scene
             const direction = parts[0]
             this.player.play(`${direction}-idle`)
         }
+        
+        // player is behind boxes when behind them and in front when in front them
+        this.children.each(c => {
+            /** @type {Phaser.Physics.Arcade.Sprite} */
+            // @ts-ignore
+            const child = c
+    
+            child.setDepth(child.y)
+        })
         
     }
     

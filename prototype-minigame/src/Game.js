@@ -1,5 +1,12 @@
 import Phaser from 'phaser'
 
+const level = [
+    [1, 0, 3],
+    [2, 4, 1],
+    [3, 4, 2]
+]
+
+
 export default class Game extends Phaser.Scene
 {
     /** @type {Phaser.Physics.Arcade.StaticGroup} */
@@ -100,14 +107,16 @@ export default class Game extends Phaser.Scene
 
             let xPer = 0.25
             let y = 150
-            for (let row = 0; row < 3; ++row)
+            for (let row = 0; row < level.length; ++row)
             {
-                for (let col = 0; col < 3; ++col)
+                
+                for (let col = 0; col < level[row].length; ++col)
                 {
                     /** @type {Phaser.Physics.Arcade.Sprite} */
                     const box = this.boxGroup.get(width * xPer, y, 'sokoban', 10)
                     box.setSize(64, 32)
                         .setOffset(0, 32)
+                        .setData('itemType', level[row][col]) //
 
                     xPer += 0.25
                 }

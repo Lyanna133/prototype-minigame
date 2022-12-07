@@ -14,6 +14,12 @@ export default class Preloader extends Phaser.Scene
         this.load.spritesheet('sokoban', 'textures/sokoban_tilesheet.png',{
             frameWidth: 64
         })
+
+        this.load.image('panda', 'textures/panda.png')
+        this.load.image('giraffe', 'textures/giraffe.png')
+        this.load.image('penguin', 'textures/penguin.png')
+        this.load.image('whale', 'textures/whale.png')
+        this.load.image('crocodile', 'textures/crocodile.png')
     }
 
     create()

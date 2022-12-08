@@ -14,7 +14,7 @@ export default class Preloader extends Phaser.Scene
         this.load.spritesheet('sokoban', 'textures/sokoban_tilesheet.png',{
             frameWidth: 64
         })
-
+        //loading in of the animal img for in the boxes
         this.load.image('crocodile', 'textures/crocodile.png')
         this.load.image('giraffe', 'textures/giraffe.png')
         this.load.image('penguin', 'textures/penguin.png')
@@ -24,7 +24,7 @@ export default class Preloader extends Phaser.Scene
 
     create()
     {
-        // getting all the animations from the spritesheet
+        // getting all the animations from the spritesheet, so the player walks
         this.anims.create({
             key: 'down-idle',
             frames: [{ key: 'sokoban', frame: 52 }]

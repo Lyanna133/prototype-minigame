@@ -1,6 +1,5 @@
+//loading in phaser, game file and the preloader
 import Phaser from 'phaser'
-
-// import HelloWorldScene from './HelloWorldScene'
 import Game from './Game'
 import Preloader from './Preloader'
 

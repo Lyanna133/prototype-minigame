@@ -5,7 +5,7 @@ const level = [
     [2, 4, 1],
     [3, 4, 2]
 ]
-
+//importing the countdown timer
 import CountdownController from './CountdownController'
 
 export default class Game extends Phaser.Scene
@@ -35,16 +35,12 @@ export default class Game extends Phaser.Scene
             .setOffset(12, 38)
             .play('down-idle')
 
-        //generating the boxes
         this.boxGroup = this.physics.add.staticGroup()
 	    this.createBoxes()
-
-	    // this.physics.add.collider(this.player, this.boxGroup) niet nodig
-
         this.physics.add.collider(
             this.boxGroup,
             this.player,
-            this.handlePlayerBoxCollide, // Dit stuk werkt!!!
+            this.handlePlayerBoxCollide, 
             undefined,
             this
         )
@@ -52,11 +48,11 @@ export default class Game extends Phaser.Scene
         this.itemsGroup = this.add.group()
         
         
-        // create a Text object 👇
+        // create a Text object for the countdown
 		const timerLabel = this.add.text(width * 0.5, 50, '45', { fontSize: 48 })
         .setOrigin(0.5)
 
-        // 👇 create a new instance
+        //  create a new instance for the countdown
         this.countdown = new CountdownController(this, timerLabel)
         this.countdown.start(this.handleCountdownFinished.bind(this))
     }
@@ -90,7 +86,8 @@ export default class Game extends Phaser.Scene
             })
         
     }
-    
+
+    //player being able to walk, using arrowkeys
     updatePlayer()
     {
         const speed = 200
@@ -169,6 +166,8 @@ export default class Game extends Phaser.Scene
      * @param {Phaser.Physics.Arcade.Sprite} player 
      * @param {Phaser.Physics.Arcade.Sprite} box
      */
+
+    //handeling the player colliding with the boxes and not running through them
     handlePlayerBoxCollide(player, box)
     {
         const opened = box.getData('opened')
@@ -185,7 +184,7 @@ export default class Game extends Phaser.Scene
 
         this.activeBox.setFrame(9)
     }
-
+    // when player gets close to the box change the color
     updateActiveBox()
     {
         if (!this.activeBox)
@@ -193,13 +192,13 @@ export default class Game extends Phaser.Scene
             return
         }
 
-        // get the distance here 👇
+        // get the distance
         const distance = Phaser.Math.Distance.Between(
             this.player.x, this.player.y,
             this.activeBox.x, this.activeBox.y
         )
 
-        if (distance < 64) // 👈 do nothing if still near
+        if (distance < 64) // do nothing if still near
         {
             return
         }
@@ -207,10 +206,10 @@ export default class Game extends Phaser.Scene
         // return to using frame 10 when too far
         this.activeBox.setFrame(10)
 
-        // and make activeBox undefined
+        //  make activeBox undefined
         this.activeBox = undefined
     }
-
+    //player being able to open the box
     openBox(box)
     {
         if (!box)
@@ -287,7 +286,7 @@ export default class Game extends Phaser.Scene
         })
 
     }
-
+    // cheching if the player opened two boxes with the same animal
     checkForMatch()
     {
         // pop from end to get second and first opened boxes
@@ -316,7 +315,7 @@ export default class Game extends Phaser.Scene
             return
         }
             ++this.matchesCount
-            // we have a match! wait 1 second then set box to frame 8
+            // we have a match, wait 1 second then set box to frame 8
             this.time.delayedCall(1000, () => {
             first.box.setFrame(8)
             second.box.setFrame(8)
@@ -325,11 +324,11 @@ export default class Game extends Phaser.Scene
             {
                     // game won
                     this.countdown.stop()
-                // 👇 disable and stop player like before
+                // disable and stop player like before
                 this.player.active = false
                 this.player.setVelocity(0, 0)
 
-                // add a You Win! text 👇
+                // show you win text
                 const { width, height } = this.scale
                 this.add.text(width * 0.5, height * 0.9, 'You Win!', {
                     fontSize: 48
@@ -338,13 +337,13 @@ export default class Game extends Phaser.Scene
             }
         })
     }
-
+    //if player opens the wrong box show the Croc
     handleCrocSelected()
     {
         // get the selected box information
         const { box, item } = this.selectedBoxes.pop()
 
-        // tint the bear red
+        // tint the croc red
         item.setTint(0xff0000)
 
         // set the box to frame 7 (a red box)
@@ -367,19 +366,20 @@ export default class Game extends Phaser.Scene
                 scale: 0,
                 duration: 300,
                 onComplete: () => {
-                    this.player.active = true // 👈 re-activate the player
+                    this.player.active = true // re-activate the player
                 }
             })
         })
         
     }
+    //If countdown runs out show/do this
     handleCountdownFinished()
     {
-        // disable player like we've done before
+        // disable player 
         this.player.active = false
         this.player.setVelocity(0, 0)
 
-        // create a You Lose! message
+        // show you lose text
         const { width, height } = this.scale
         this.add.text(width * 0.5, height * 0.9, 'You Lose!', { fontSize: 48 })
             .setOrigin(0.5)

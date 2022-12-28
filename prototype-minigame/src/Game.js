@@ -49,7 +49,7 @@ export default class Game extends Phaser.Scene
         
         
         // create a Text object for the countdown
-		const timerLabel = this.add.text(width * 0.5, 50, '45', { fontSize: 48 })
+		const timerLabel = this.add.text(width * 0.5, 50, '45', {  })
         .setOrigin(0.5)
 
         //  create a new instance for the countdown
@@ -331,7 +331,7 @@ export default class Game extends Phaser.Scene
                 // show you win text
                 const { width, height } = this.scale
                 this.add.text(width * 0.5, height * 0.9, 'You Win!', {
-                    fontSize: 48
+                    
                 })
                 .setOrigin(0.5)
             }
@@ -381,7 +381,7 @@ export default class Game extends Phaser.Scene
 
         // show you lose text
         const { width, height } = this.scale
-        this.add.text(width * 0.5, height * 0.9, 'You Lose!', { fontSize: 48 })
+        this.add.text(width * 0.5, height * 0.9, 'You Lose!', {  })
             .setOrigin(0.5)
-    }   
+    }     
 }

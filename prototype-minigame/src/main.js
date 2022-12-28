@@ -19,3 +19,4 @@ const config = {
 }
 
 export default new Phaser.Game(config)
+//Test to build the game

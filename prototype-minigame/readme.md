@@ -101,7 +101,7 @@ You can change the dev server's port number by modifying the `vite.config.js` fi
 ```js
 {
 	// ...
-	server: { host: '0.0.0.0', port: 8000 },
+	server: { host: '0.0.0.0', port: 8001 },
 }
 ```
 
